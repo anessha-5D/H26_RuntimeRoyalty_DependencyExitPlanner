@@ -1,6 +1,6 @@
 # Dependency Exit Capsule
 
-Generated on: 2026-10-15 13:22  
+Generated on: 2026-10-15 13:59  
 AI model: gemma4:e2b  
 Access method: Local Ollama
 
@@ -17,55 +17,34 @@ Access method: Local Ollama
 ## 3. Verified Repository Evidence
 - Import scan was performed on Python files.
 - Baseline test result:
+rwari\LinkWatch\linkwatch\resources.py:1: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+    import pkg_resources
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_report.py::test_report_renders_all_sites - ImportError: can...
+=================== 1 failed, 9 passed, 1 warning in 9.18s ====================
 
 
 ## 4. AI-GENERATED RECOMMENDATION
 AI-GENERATED RECOMMENDATION
 
-### Dependency Maintenance Report: `requests`
+**1. Assess risk:** Low
 
-**Context:** The dependency `requests` is used in core components related to HTTP operations (`checker.py`, `encoding.py`, `http_patch.py`). This indicates the project relies heavily on synchronous, reliable HTTP communication.
+**2. Say whether replacement is needed:** No
 
----
+**3. Suggest one replacement if needed:** Not needed. The `requests` library is the standard, robust, and widely adopted library for making HTTP requests in Python. It is highly stable and maintained.
 
-#### 1. Assess Risk
-**Risk Level:** Low
+**4. Give migration steps:** No migration steps are required for this dependency.
 
-**Rationale:** `requests` is the established, industry-standard library for making HTTP requests in Python. It is mature, widely tested, and maintained actively. The risk associated with maintaining this dependency is minimal, provided standard usage patterns are followed.
+**5. List compatibility risks:**
+*   **Minor Risk:** While the `requests` library is stable, always monitor for major Python version updates (e.g., moving from Python 3.8 to 3.12) to ensure compatibility. Check the `requests` documentation for any specific changes related to HTTP standards or underlying dependencies, although this is rare for core libraries.
+*   **General Risk:** The reported `DeprecationWarning` related to `pkg_resources` in `resources.py` suggests that other parts of the codebase might be using older packaging methods, but this is not a risk related to the `requests` dependency itself.
 
-#### 2. Say whether replacement is needed
-**Replacement Needed:** No (Recommended to keep, unless specific architectural changes are desired).
-
-**Rationale:** Given that the usage revolves around standard HTTP operations (checking links, encoding, patching HTTP), `requests` is the most idiomatic and least complex solution. Replacing it would introduce unnecessary complexity unless the project requires modern asynchronous support or specific features only offered by alternatives.
-
-#### 3. Suggest one replacement if needed
-If the goal is modernization (e.g., moving towards asynchronous operations or using a newer standard), the best alternative is:
-
-**Suggested Replacement:** `httpx`
-
-**Rationale:** `httpx` is a modern HTTP client that supports both synchronous and asynchronous requests. If `linkwatch` ever needs to scale its network operations or integrate heavily with async frameworks (like `asyncio`), `httpx` provides a powerful, unified solution that aims to maintain a similar API structure to `requests`.
-
-#### 4. Give migration steps (If replacing with `httpx`)
-1.  **Installation:** Replace `requests` with `httpx` in your dependency file (`requirements.txt` or `setup.py`).
-2.  **Update Imports:** Change all `import requests` statements to `import httpx`.
-3.  **Update Calls:** Review all places where `requests.get()`, `requests.post()`, etc., are used. Update these calls to the corresponding `httpx` methods (e.g., `httpx.get()`, `httpx.post()`). Pay close attention to handling sessions and timeouts, as the API structure differs slightly.
-4.  **Test Execution:** Run the full suite of existing unit and integration tests (see Section 6) to ensure functional parity.
-
-#### 5. List compatibility risks
-1.  **API Differences:** The synchronous API of `requests` and the modern approach of `httpx` are not identical. Any custom session handling, cookie management, or specific header manipulations must be re-implemented using the `httpx` API.
-2.  **Exception Handling:** Changes in the specific exception types raised (e.g., network errors, timeouts) may require updating `try...except` blocks in `checker.py` and `http_patch.py`.
-3.  **Data Serialization:** If the code relies on implicit serialization handling (e.g., JSON parsing), ensure the new HTTP library handles the response objects in the expected manner.
-
-#### 6. Suggest tests
-To ensure stability after any dependency change (or before implementing a replacement), focus on the functionality that directly interacts with the network.
-
-1.  **Unit Tests for Logic:**
-    *   Test `linkwatch\checker.py` logic by mocking HTTP responses (ensuring the code correctly handles successful status codes, 404s, and connection errors).
-    *   Test `linkwatch\encoding.py` logic to ensure it handles responses from HTTP calls correctly.
-2.  **Integration Tests (Critical):**
-    *   Create dedicated integration tests for the functions in `linkwatch\http_patch.py` that simulate real-world network calls.
-    *   Verify that the patching logic successfully modifies the expected HTTP response based on the inputs provided.
-    *   Test edge cases: timeouts, invalid URLs, and malformed responses.
+**6. Suggest tests:**
+*   **Integration Tests:** Ensure that the functions utilizing `requests` (in `checker.py`, `encoding.py`, and `http_patch.py`) are thoroughly tested.
+*   **Mocking Tests:** Implement tests that mock external HTTP services or network calls to ensure the dependency logic handles successful responses, various HTTP status codes (4xx, 5xx), and connection failures gracefully.
+*   **Endpoint Tests:** If the code interacts with specific URLs, test the actual interaction to ensure correct data retrieval and parsing.
 
 ## 5. Test Evidence
 - Baseline tests: recorded above.
