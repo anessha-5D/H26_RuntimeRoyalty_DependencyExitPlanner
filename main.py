@@ -12,6 +12,11 @@ args = parser.parse_args()
 repo = args.repo
 dependency = args.dependency
 
+if result.returncode == 0:
+    print("Baseline tests passed.")
+else:
+    print("Baseline tests failed, but continuing with AI analysis.")
+    
 print("Dependency files found:")
 print(find_dependency_files(repo))
 
