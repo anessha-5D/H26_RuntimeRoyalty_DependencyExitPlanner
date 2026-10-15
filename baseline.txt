@@ -1,0 +1,13 @@
+ImportError while loading conftest 'C:\Users\HP\OneDrive\kj hackathon\LinkWatch\tests\conftest.py'.
+tests\conftest.py:8: in <module>
+    import linkwatch.cli  # noqa: F401
+    ^^^^^^^^^^^^^^^^^^^^
+linkwatch\cli.py:6: in <module>
+    from . import __version__, cache, checker, config, resources
+linkwatch\config.py:7: in <module>
+    class Site(BaseModel):
+.venv\Lib\site-packages\pydantic\main.py:241: in __new__
+    vg.check_for_unused()
+.venv\Lib\site-packages\pydantic\class_validators.py:189: in check_for_unused
+    raise ConfigError(
+E   pydantic.errors.ConfigError: Validators defined with incorrect fields: url_has_scheme, name_not_empty (use check_fields=False if you're inheriting from the model and intended this)
